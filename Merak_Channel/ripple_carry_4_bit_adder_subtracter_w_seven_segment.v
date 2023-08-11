@@ -6,7 +6,7 @@ output Cout;
 output V; // overflow
 wire[3:0] S;
 
-ripple_carry_4_bit_adder_subtracter(.A(A), .B(B), .C0(Cin), .S(S), .C4(Cout), .V(V));
-Seven_Segment(.Din(S), .Dout(Sout));
+ripple_carry_4_bit_adder_subtracter RCA(.A(A), .B(B), .C0(Cin), .S(S), .C4(Cout), .V(V));
+Seven_Segment SS(.Din(S), .Dout(Sout));
 
 endmodule
