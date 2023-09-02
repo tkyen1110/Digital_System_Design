@@ -1,3 +1,5 @@
+// iverilog -o lab1.vvp adders.v gates.v lab1.v
+// vvp lab1.vvp
 `timescale 1ns/1ps
 `include "gates.v"
 `include "adders.v"
@@ -10,8 +12,8 @@ module lab1_main();
 	adder_rtl adder(c3, s, a, b, c0);
 
 	// TODO:: Try to connect the module into our test bench
-	//?? adder_gl(c3_gl, s_gl, a, b, c0);
-	
+	rca_gl rc_adder(c3_gl, s_gl, a, b, c0);
+	// cla_gl cl_adder(c3_gl, s_gl, a, b, c0);
 
 	// track the maximum delays
 	integer delay, max_delay=0, time_max;

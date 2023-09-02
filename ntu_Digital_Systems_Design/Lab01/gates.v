@@ -1,5 +1,6 @@
 `ifndef GATES
 `define GATES
+`timescale 1ns/1ps
 
 module NOT(output Y, input A);
 	not #1 g0(Y, A);
