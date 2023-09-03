@@ -1,3 +1,27 @@
+# RISC-V Assembly Programmer's Manual
+# https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md
+
+# System Calls
+# https://www.doc.ic.ac.uk/lab/secondyear/spim/node8.html
+# Service	        System Call Code	Arguments	Result
+# print_int                 1
+# print_float               2
+# print_double              3
+# print_string              4
+# read_int                  5
+# read_float	            6
+# read_double	            7
+# read_string	            8
+# sbrk                      9
+# exit                      10
+# print_character	        11
+# read_character	        12
+# open	                    13
+# read	                    14
+# write	                    15
+# close	                    16
+# exit2	                    17
+
 .globl __start
 
 .rodata
@@ -60,9 +84,8 @@ mod:
     jal x1, output
 
 pow:
-    mv s11, s0
+    addi s11, x0, 1
     bne s2, x0, pow_loop    # if x0 != 0, goto pow_loop
-    addi s11, x0, 1         # else s11 = 1 and goto output
     jal x0, output          
 pow_loop:
     addi s3, x0, 1      # s2 = s2-1
