@@ -22,6 +22,8 @@
 # close	                    16
 # exit2	                    17
 
+# https://jupitersim.gitbook.io/jupiter/assembler/ecalls
+
 .globl __start
 
 .rodata
