@@ -16,54 +16,62 @@ CPU CPU(
     .start_i(Start),
     .rst_i  (Reset)
 );
-  
+
 initial begin
     $dumpfile("CPU.vcd");
     $dumpvars;
     counter = 0;
     stall = 0;
     flush = 0;
-    
+
     // initialize instruction memory
     for(i=0; i<256; i=i+1) begin
         CPU.Instruction_Memory.memory[i] = 32'b0;
     end
-    
+
     // initialize data memory
     for(i=0; i<32; i=i+1) begin
         CPU.Data_Memory.memory[i] = 32'b0;
-    end    
+    end
     CPU.Data_Memory.memory[0] = 5;
+    CPU.Data_Memory.memory[1] = 6;
+    CPU.Data_Memory.memory[2] = 10;
+    CPU.Data_Memory.memory[3] = 18;
+    CPU.Data_Memory.memory[4] = 29;
     // [D-MemoryInitialization] DO NOT REMOVE THIS FLAG !!!
-        
+ 
     // initialize Register File
     for(i=0; i<32; i=i+1) begin
         CPU.Registers.register[i] = 32'b0;
+        if (i>=24 && i<=27) begin
+            CPU.Registers.register[i] = -i;
+        end
+        if (i>=28 && i<=31) begin
+            CPU.Registers.register[i] = 2*i;
+        end
     end
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
     // TODO: initialize your pipeline registers
 
-    
+
     // Load instructions into instruction memory
     // Make sure you change back to "instruction.txt" before submission
-    $readmemb("instruction.txt", CPU.Instruction_Memory.memory);
-    
+    $readmemb("./testdata/instruction_1.txt", CPU.Instruction_Memory.memory);
+
     // Open output file
     // Make sure you change back to "output.txt" before submission
     outfile = $fopen("output.txt") | 1;
-    
+
     Clk = 1;
     Reset = 1;
     Start = 0;
-    
+
     #(`CYCLE_TIME/4) 
     Reset = 0;
     Start = 1;
-        
-    
 end
-  
+
 always@(posedge Clk) begin
     if(counter == num_cycles)    // stop after num_cycles cycles
         $finish;
@@ -75,7 +83,7 @@ always@(posedge Clk) begin
     // print PC
     // DO NOT CHANGE THE OUTPUT FORMAT
     $fdisplay(outfile, "cycle = %d, Start = %0d, Stall = %0d, Flush = %0d\nPC = %d", counter, Start, stall, flush, CPU.PC.pc_o);
-    
+
     // print Registers
     // DO NOT CHANGE THE OUTPUT FORMAT
     $fdisplay(outfile, "Registers");
@@ -100,11 +108,9 @@ always@(posedge Clk) begin
     $fdisplay(outfile, "Data Memory: 0x1C = %10d", CPU.Data_Memory.memory[7]);
 
     $fdisplay(outfile, "\n");
-    
+
     counter = counter + 1;
-    
-      
+
 end
 
-  
 endmodule

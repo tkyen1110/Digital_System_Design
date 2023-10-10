@@ -33,6 +33,4 @@ always@(posedge clk_i) begin
         register[RDaddr_i] <= RDdata_i;
 end
 
-
-   
 endmodule 
