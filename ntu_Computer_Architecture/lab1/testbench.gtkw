@@ -1,0 +1,57 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed Oct 11 21:19:52 2023
+[*]
+[dumpfile] "/mnt/d/Digital_System_Design/ntu_Computer_Architecture/lab1/CPU.vcd"
+[dumpfile_mtime] "Tue Oct 10 22:09:45 2023"
+[dumpfile_size] 37587
+[savefile] "/mnt/d/Digital_System_Design/ntu_Computer_Architecture/lab1/testbench.gtkw"
+[timestart] 0
+[size] 1920 1017
+[pos] -87 -87
+*-7.000000 468 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TestBench.
+[treeopen] TestBench.CPU.
+[sst_width] 214
+[signals_width] 359
+[sst_expanded] 1
+[sst_vpaned_height] 298
+@28
+TestBench.CPU.clk_i
+@22
+TestBench.CPU.IF_Instr[31:0]
+TestBench.CPU.EX_ALU_result[31:0]
+TestBench.CPU.MEM_ALU_result[31:0]
+TestBench.CPU.WB_ALU_result[31:0]
+@28
+TestBench.CPU.Flush
+TestBench.CPU.NoOp
+TestBench.CPU.PCWrite
+TestBench.CPU.Stall
+TestBench.CPU.ForwardA[1:0]
+TestBench.CPU.ForwardB[1:0]
+@22
+TestBench.CPU.MUX_ForwardA[31:0]
+TestBench.CPU.MUX_ForwardB[31:0]
+TestBench.CPU.MUX_ALUSrc[31:0]
+TestBench.CPU.ALUCtrl[3:0]
+@28
+TestBench.CPU.EX_ALUSrc
+@22
+TestBench.CPU.EX_Imm[31:0]
+TestBench.CPU.ID_RS1[31:0]
+TestBench.CPU.ID_RS2[31:0]
+TestBench.CPU.EX_RS1[31:0]
+TestBench.CPU.EX_RS2[31:0]
+@23
+TestBench.CPU.MUX4to1_ForwardA.data1_i[31:0]
+@22
+TestBench.CPU.MUX4to1_ForwardA.data2_i[31:0]
+TestBench.CPU.MUX4to1_ForwardA.data3_i[31:0]
+TestBench.CPU.MUX4to1_ForwardA.data4_i[31:0]
+@28
+TestBench.CPU.MUX4to1_ForwardA.select_i[1:0]
+@22
+TestBench.CPU.MUX4to1_ForwardA.data_o[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
