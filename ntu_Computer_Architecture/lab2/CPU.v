@@ -2,13 +2,27 @@ module CPU
 (
     clk_i, 
     rst_i,
-    start_i
+    start_i,
+    // to Data Memory interface
+    mem_data_i,
+    mem_ack_i,
+    mem_data_o,
+    mem_addr_o,
+    mem_enable_o,
+    mem_write_o
 );
 
 // Ports
 input               clk_i;
 input               rst_i;
 input               start_i;
+
+input   [255:0]     mem_data_i;
+input               mem_ack_i;
+output  [255:0]     mem_data_o;
+output  [31:0]      mem_addr_o;
+output              mem_enable_o;
+output              mem_write_o;
 
 // Instruction Fetch (IF)
 wire                PCWrite;
@@ -35,7 +49,7 @@ wire    [3:0]       ALUCtrl;
 wire    [31:0]      EX_ALU_result;
 
 // Memory Access (MEM)
-wire                MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite;
+wire                MEM_RegWrite, MEM_MemtoReg, MEM_MemRead, MEM_MemWrite, MemStall;
 wire    [31:0]      MEM_ALU_result, MEM_WriteData, MEM_ReadData;
 wire    [4:0]       MEM_RDaddr;
 
@@ -58,6 +72,7 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
+    .stall_i    (MemStall),
     .PCWrite_i  (PCWrite),
     .pc_i       (MUX_PC),
     .pc_o       (IF_PC)
@@ -82,6 +97,7 @@ IF_ID IF_ID(
     .instr_i    (IF_Instr),
     .stall_i    (Stall),
     .flush_i    (Flush),
+    .MemStall_i (MemStall),
     .pc_o       (ID_PC),
     .instr_o    (ID_Instr)
 );
@@ -150,6 +166,7 @@ ID_EX ID_EX(
     .RS1addr_i  (ID_Instr[19:15]),
     .RS2addr_i  (ID_Instr[24:20]),
     .RDaddr_i   (ID_Instr[11:7]),
+    .MemStall_i (MemStall),
     .RegWrite_o (EX_RegWrite),
     .MemtoReg_o (EX_MemtoReg),
     .MemRead_o  (EX_MemRead),
@@ -226,6 +243,7 @@ EX_MEM EX_MEM(
     .ALU_result_i        (EX_ALU_result),
     .WriteData_i         (MUX_ForwardB),
     .RDaddr_i            (EX_RDaddr),
+    .MemStall_i          (MemStall),
     .RegWrite_o          (MEM_RegWrite),
     .MemtoReg_o          (MEM_MemtoReg),
     .MemRead_o           (MEM_MemRead),
@@ -236,13 +254,26 @@ EX_MEM EX_MEM(
 );
 
 // Memory Access (MEM)
-Data_Memory Data_Memory(
-    .clk_i      (clk_i),
-    .addr_i     (MEM_ALU_result),
-    .MemRead_i  (MEM_MemRead),
-    .MemWrite_i (MEM_MemWrite),
-    .data_i     (MEM_WriteData),
-    .data_o     (MEM_ReadData)
+dcache_controller dcache(
+    // System clock, reset and stall
+    .clk_i(clk_i),
+    .rst_i(rst_i),
+
+    // to Data Memory interface
+    .mem_data_i(mem_data_i),
+    .mem_ack_i(mem_ack_i),
+    .mem_data_o(mem_data_o),
+    .mem_addr_o(mem_addr_o),
+    .mem_enable_o(mem_enable_o),
+    .mem_write_o(mem_write_o),
+
+    // to CPU interface
+    .cpu_data_i(MEM_WriteData),
+    .cpu_addr_i(MEM_ALU_result),
+    .cpu_MemRead_i(MEM_MemRead),
+    .cpu_MemWrite_i(MEM_MemWrite),
+    .cpu_data_o(MEM_ReadData),
+    .cpu_stall_o(MemStall)
 );
 
 // MEM_WB Register
@@ -254,6 +285,7 @@ MEM_WB MEM_WB(
     .ALU_result_i        (MEM_ALU_result),
     .MemData_i           (MEM_ReadData),
     .RDaddr_i            (MEM_RDaddr),
+    .MemStall_i          (MemStall),
     .RegWrite_o          (WB_RegWrite),
     .MemtoReg_o          (WB_MemtoReg),
     .ALU_result_o        (WB_ALU_result),

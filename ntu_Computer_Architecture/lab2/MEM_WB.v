@@ -6,6 +6,7 @@ module MEM_WB (
     ALU_result_i,
     MemData_i,
     RDaddr_i,
+    MemStall_i,
 
     RegWrite_o,
     MemtoReg_o,
@@ -20,6 +21,7 @@ input                       MemtoReg_i;
 input signed        [31:0]  ALU_result_i;
 input signed        [31:0]  MemData_i;
 input               [4:0]   RDaddr_i;
+input                       MemStall_i;
 
 output reg                  RegWrite_o;
 output reg                  MemtoReg_o;
@@ -35,7 +37,7 @@ always @(posedge clk_i or posedge rst_i) begin
         MemData_o <= 0;
         RDaddr_o <= 0;
     end
-    else begin
+    else if (~MemStall_i) begin
         RegWrite_o <= RegWrite_i;
         MemtoReg_o <= MemtoReg_i;
         ALU_result_o <= ALU_result_i;

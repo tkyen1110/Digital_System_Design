@@ -5,6 +5,7 @@ module IF_ID (
     instr_i,
     stall_i,
     flush_i,
+
     pc_o,
     instr_o
 );

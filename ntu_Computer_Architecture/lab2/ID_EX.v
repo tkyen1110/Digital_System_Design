@@ -14,6 +14,7 @@ module ID_EX (
     RS1addr_i,
     RS2addr_i,
     RDaddr_i,
+    MemStall_i,
 
     RegWrite_o,
     MemtoReg_o,
@@ -44,6 +45,7 @@ input               [9:0] ALUfunct_i;
 input               [4:0] RS1addr_i;
 input               [4:0] RS2addr_i;
 input               [4:0] RDaddr_i;
+input               MemStall_i;
 
 output reg          RegWrite_o;
 output reg          MemtoReg_o;
@@ -75,7 +77,7 @@ always @(posedge clk_i or posedge rst_i) begin
         RS2addr_o <= 0;
         RDaddr_o <= 0;
     end
-    else begin
+    else if (~MemStall_i) begin
         RegWrite_o <= RegWrite_i;
         MemtoReg_o <= MemtoReg_i;
         MemRead_o <= MemRead_i;
