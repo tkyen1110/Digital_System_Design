@@ -50,6 +50,7 @@ always@(posedge clk_i or posedge rst_i) begin
             end
         end
     end
+
     if (enable_i && write_i) begin
         // TODO: Handle your write of 2-way associative cache + LRU here
         case(block_hit)
@@ -67,7 +68,18 @@ always@(posedge clk_i or posedge rst_i) begin
                 tag[addr_i][lru[addr_i]][24:23] <= 2'b10; // valid, but not dirty
                 tag[addr_i][lru[addr_i]][22:0] <= tag_i[22:0];
                 data[addr_i][lru[addr_i]] <= data_i;
-                lru[addr_i] <= ~lru[addr_i];
+            end
+        endcase
+    end
+
+    //read hit
+    if (enable_i && !write_i) begin
+        case(block_hit)
+            2'b01: begin
+                lru[addr_i] <= 1'b1;
+            end
+            2'b10: begin
+                lru[addr_i] <= 1'b0;
             end
         endcase
     end
@@ -81,22 +93,14 @@ always @(*)begin
             2'b01: begin
                 tag_o <= tag[addr_i][0];
                 data_o <= data[addr_i][0];
-                lru[addr_i] <= 1'b1;
             end
             2'b10: begin
                 tag_o <= tag[addr_i][1];
                 data_o <= data[addr_i][1];
-                lru[addr_i] <= 1'b0;
             end
             default: begin
-                if (write_i) begin
-                    tag_o <= tag[addr_i][~lru[addr_i]];
-                    data_o <= data[addr_i][~lru[addr_i]];
-                end
-                else begin
-                    tag_o <= tag[addr_i][lru[addr_i]];
-                    data_o <= data[addr_i][lru[addr_i]];
-                end
+                tag_o <= tag[addr_i][lru[addr_i]];
+                data_o <= data[addr_i][lru[addr_i]];
             end
         endcase
     end

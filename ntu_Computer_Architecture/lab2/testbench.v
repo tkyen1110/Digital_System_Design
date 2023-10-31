@@ -9,7 +9,9 @@ integer            i, j, outfile, outfile2, counter;
 reg                flag;
 reg                valid;
 reg        [26:0]  address;
-reg        [23:0]  tag;
+reg        [24:0]  tag;
+reg        [255:0] data;
+reg                lru;
 reg        [3:0]   index;
 
 wire    [256-1:0]  mem_cpu_data; 
@@ -113,6 +115,10 @@ always@(posedge Clk) begin
         for (j=0; j<2; j=j+1) begin
             for (i=0; i<16; i=i+1) begin
                 tag = CPU.dcache.dcache_sram.tag[i][j];
+                data = CPU.dcache.dcache_sram.data[i][j];
+                lru = CPU.dcache.dcache_sram.lru[i];
+                $fdisplay(outfile, "i = %2d, j = %0d, lru = %b, tag = %b, data = %h", i, j, lru, tag, data);
+
                 valid = tag[24];
                 if (valid) begin
                     index = i;
@@ -121,6 +127,7 @@ always@(posedge Clk) begin
                 end
             end 
         end
+        $fdisplay(outfile, "\n");
     end
     if(counter > num_cycles) begin    // stop after num_cycles cycles
         $finish;
